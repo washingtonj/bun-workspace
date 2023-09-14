@@ -1,8 +1,13 @@
-import { Router, Server } from 'bun-lightyear'
+import { Router, Server, LightyearResponse, Controller } from 'bun-lightyear'
 
-const router = new Router()
+const getHello: Controller = (req) => new LightyearResponse({ body: `Hello ${req.params[0]}` })
+const getHelloWildcard: Controller = (req) => new LightyearResponse({ body: `Hello ${req.params.name}` })
+const getHelloQuery: Controller = (req) => new LightyearResponse({ body: `Hello ${req.query.name}` })
 
-router.addRoute('GET', '/', () => new Response('Hello, world!'))
-router.addRoute('GET', '/json', () => new Response(JSON.stringify({ hello: 'world' })))
+const router = new Router({ prefix: '/api' })
+
+router.addRoute('GET', '/', getHello)
+router.addRoute('GET', '/hello', getHelloQuery)
+router.addRoute('GET', '/hello/:name', getHelloWildcard)
 
 export const server = new Server(router)

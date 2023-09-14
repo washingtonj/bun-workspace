@@ -4,8 +4,13 @@
   "description": "A lightning HTTP package using Bun Server",
   "main": "index.ts",
   "scripts": {
-    "test": "bun test --coverage"
+    "test": "bun test",
+    "coverage": "bun test --coverage"
   },
   "author": "Washington Junior",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/supertest": "^2.0.12",
+    "supertest": "^6.3.3"
+  }
 }
