@@ -15,6 +15,6 @@ export interface SaveRoomParams {
 
 export abstract class RoomRepository {
   abstract create (params: CreateRoomParams): Promise<RoomEntity>
-  abstract findById (params: FindRoomByIdParams): Promise<RoomEntity | null>
+  abstract findById (params: FindRoomByIdParams): Promise<RoomEntity | undefined>
   abstract save (params: SaveRoomParams): Promise<void>
 }

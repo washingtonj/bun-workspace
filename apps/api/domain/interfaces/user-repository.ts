@@ -10,5 +10,5 @@ export interface FindUserByIdParams {
 
 export abstract class UserRepository {
   abstract create (params: CreateUserParams): Promise<UserEntity>
-  abstract findById (params: FindUserByIdParams): Promise<UserEntity | null>
+  abstract findById (params: FindUserByIdParams): Promise<UserEntity | undefined>
 }

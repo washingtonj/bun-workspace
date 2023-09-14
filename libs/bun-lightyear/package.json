@@ -1,0 +1,11 @@
+{
+  "name": "bun-lightyear",
+  "version": "1.0.0",
+  "description": "A lightning HTTP package using Bun Server",
+  "main": "index.ts",
+  "scripts": {
+    "test": "bun test --coverage"
+  },
+  "author": "Washington Junior",
+  "license": "ISC"
+}

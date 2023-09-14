@@ -3,7 +3,7 @@ import type { RoomEntity } from 'domain/entities'
 
 export interface CreateRoomUseCaseParams {
   name: string
-  owner: string
+  ownerName: string
 }
 
 export class CreateRoomUseCase {
