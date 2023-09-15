@@ -1,15 +1,17 @@
-export class LightyearRequest<T = any> {
+export class LightyearRequest {
+  private readonly request: Request
   public readonly url: string
   public readonly method: string
   public readonly query: Record<string, string>
   public readonly headers: Record<string, string>
   public pathname: string
-  public params: { [key: string]: string }
-  public json?: Record<string, T>
+  public params: Record<string, string>
 
-  constructor(request: Request) {
+  constructor (request: Request) {
     const { pathname } = new URL(request.url)
     const { method, url, headers } = request
+
+    this.request = request
 
     this.method = method
     this.url = url
@@ -17,27 +19,24 @@ export class LightyearRequest<T = any> {
     this.query = this.getQueryParams()
     this.headers = Object.fromEntries(headers.entries())
     this.params = {}
-
-    this.transformJson(request)
   }
 
-  private async transformJson(request: Request): Promise<void> {
-    const contentType = request.headers.get('content-type') || ''
+  public async json (): Promise<Record<string, any> | undefined> {
+    const contentType = this.headers['content-type'] ?? ''
 
-    if (contentType.includes('application/json')) {
-      this.json = await request.json()
+    if (contentType === 'application/json') {
+      return await this.request.json()
     }
   }
 
-  private getQueryParams(): Record<string, string> {
+  private getQueryParams (): Record<string, string> {
     const query: Record<string, string> = {}
     const match = this.url.match(/\?(.*)/)
 
-    
-    if (match) {
+    if (match != null) {
       const queryString = match[1]
       const pairs = queryString.split('&')
-      
+
       pairs.forEach(pair => {
         const [key, value] = pair.split('=')
         query[key] = decodeURIComponent(value)

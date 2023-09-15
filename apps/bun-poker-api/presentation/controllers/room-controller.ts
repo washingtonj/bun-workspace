@@ -1,11 +1,10 @@
 import { CreateRoomUseCase, JoinRoomUseCase } from 'domain/usecases'
 import type { RoomRepository, UserRepository } from 'domain/interfaces'
 import { InMemoryRooms, InMemoryUsers } from 'infraestructure/repositories'
-import { LightyearRequest, LightyearResponse } from 'bun-lightyear'
+import { type LightyearRequest, LightyearResponse } from 'bun-lightyear'
 
 const roomRepository: RoomRepository = new InMemoryRooms()
 const userRepository: UserRepository = new InMemoryUsers()
-
 
 export async function getRoom (request: LightyearRequest): Promise<LightyearResponse> {
   const { roomId } = request.params
@@ -13,12 +12,11 @@ export async function getRoom (request: LightyearRequest): Promise<LightyearResp
   return new LightyearResponse({ status: 200, body: room })
 }
 
-
 export async function createRoom (request: LightyearRequest): Promise<LightyearResponse> {
   const createRoomUseCase = new CreateRoomUseCase(roomRepository, userRepository)
 
   const { roomName, userName } = request.query
-  
+
   if (roomName == null || userName == null) {
     return new LightyearResponse({ status: 400, body: 'Missing roomName or userName' })
   }
@@ -32,7 +30,7 @@ export async function joinRoom (request: LightyearRequest): Promise<LightyearRes
 
   const { roomId } = request.params
   const { userName } = request.query
-  
+
   if (roomId == null || userName == null) {
     return new LightyearResponse({ status: 400, body: 'Missing roomName or userName' })
   }
@@ -40,4 +38,3 @@ export async function joinRoom (request: LightyearRequest): Promise<LightyearRes
   const room = await joinRoomUseCase.execute({ roomId, userName })
   return new LightyearResponse({ status: 200, body: room })
 }
-  

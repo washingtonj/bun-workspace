@@ -23,8 +23,8 @@ describe('LightyearResponse', () => {
   test('toResponse() returns a Response object with the correct headers', () => {
     const response = new LightyearResponse({
       headers: {
-        'Content-Type': 'text/plain',
-      },
+        'Content-Type': 'text/plain'
+      }
     })
 
     expect(response.toResponse().headers.get('Content-Type')).toBe('text/plain')

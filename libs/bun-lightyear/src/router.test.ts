@@ -14,7 +14,7 @@ describe('Router', () => {
     router.addRoute('GET', '/', async () => ({
       status: 200,
       headers: {},
-      toResponse: () => new Response('Hello world'),
+      toResponse: () => new Response('Hello world')
     }))
 
     const request = new Request('http://localhost:3000/')
@@ -29,7 +29,7 @@ describe('Router', () => {
       status: 200,
       body: 'Hello world',
       headers: {},
-      toResponse: () => new Response('Hello world'),
+      toResponse: () => new Response('Hello world')
     }))
 
     const request = new Request('http://localhost:3000/')
@@ -43,10 +43,10 @@ describe('Router', () => {
     router.addRoute('GET', '/', async () => ({
       status: 200,
       headers: {
-        'Content-Type': 'text/plain',
+        'Content-Type': 'text/plain'
       },
       body: 'Hello world',
-      toResponse: () => new Response('Hello world', { headers: { 'Content-Type': 'text/plain' } }),
+      toResponse: () => new Response('Hello world', { headers: { 'Content-Type': 'text/plain' } })
     }))
 
     const request = new Request('http://localhost:3000/')
@@ -61,7 +61,7 @@ describe('Router', () => {
       status: 200,
       body: `Hello ${req.params[0]}`,
       headers: {},
-      toResponse: () => new Response(`Hello ${req.params.name}`),
+      toResponse: () => new Response(`Hello ${req.params.name}`)
     }))
 
     const request = new Request('http://localhost:3000/hello/world')
@@ -76,7 +76,7 @@ describe('Router', () => {
       status: 200,
       body: `Hello ${req.params[0]}`,
       headers: {},
-      toResponse: () => new Response(`Hello ${req.params.name}`),
+      toResponse: () => new Response(`Hello ${req.params.name}`)
     }))
 
     const request = new Request('http://localhost:3000/api/hello/world')
@@ -90,7 +90,7 @@ describe('Router', () => {
     router.addRoute('GET', '/', async () => ({
       status: 200,
       headers: {},
-      toResponse: () => new Response('Hello world'),
+      toResponse: () => new Response('Hello world')
     }))
 
     const request = new Request('http://localhost:3000/')

@@ -1,16 +1,16 @@
 {
   "name": "bun-lightyear",
+  "author": "Washington Junior",
   "version": "1.0.0",
-  "description": "A lightning HTTP package using Bun Server",
+  "description": "A lightning abstraction of bun serve",
   "main": "index.ts",
   "scripts": {
     "test": "bun test",
-    "coverage": "bun test --coverage"
+    "coverage": "bun test --coverage",
+    "lint": "eslint ./src --ext .ts --fix"
   },
-  "author": "Washington Junior",
-  "license": "ISC",
   "devDependencies": {
-    "@types/supertest": "^2.0.12",
-    "supertest": "^6.3.3"
+    "eslint-config-custom": "workspace:libs/eslint-config-custom",
+    "typescript": "^5.0.0"
   }
 }

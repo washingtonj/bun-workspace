@@ -1,23 +1,25 @@
 {
-  "name": "api",
+  "name": "bun-poker-api",
   "version": "1.0.0",
   "description": "",
   "main": "main.ts",
   "scripts": {
     "dev": "bun --hot main.ts",
-    "lint": "eslint --ext .ts apps --fix",
+    "lint": "eslint . --ext .ts --fix",
     "test": "bun test --coverage"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bun-lightyear": "*"
+    "bun-lightyear": "workspace:libs/bun-lightyear"
   },
   "devDependencies": {
     "bun-types": "latest",
-    "eslint-config": "*"
-  },
-  "peerDependencies": {
+    "eslint-config-custom": "workspace:libs/eslint-config-custom",
     "typescript": "^5.0.0"
-  }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "build/*"
+  ]
 }

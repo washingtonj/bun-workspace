@@ -1,13 +1,7 @@
 {
-  "name": "eslint-config",
+  "name": "eslint-config-custom",
   "version": "1.0.0",
-  "description": "",
-  "main": "default.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "author": "Washington Junior",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "eslint": "^8.0.1",

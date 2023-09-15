@@ -9,13 +9,13 @@ export class LightyearResponse {
   public readonly headers: Record<string, string>
   public readonly status: number
 
-  constructor(options: LightyearResponseOptions) {
+  constructor (options: LightyearResponseOptions) {
     this.body = options.body
-    this.headers = options.headers || {}
-    this.status = options.status || 200
+    this.headers = options.headers ?? {}
+    this.status = options.status ?? 200
   }
 
-  public toResponse(): Response {
+  public toResponse (): Response {
     const { body, headers, status } = this
 
     if (typeof body === 'string') {

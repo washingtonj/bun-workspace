@@ -1,5 +1,5 @@
 import type { Router } from './router'
-import { Server as BunServer } from 'bun'
+import { type Server as BunServer } from 'bun'
 
 interface ServerOptions extends Omit<BunServer, 'fetch'> {}
 
@@ -9,7 +9,7 @@ export class Server {
   start (): BunServer {
     const server = Bun.serve({
       ...this.options,
-      fetch: (request: Request) => this.router.handle(request),
+      fetch: async (request: Request) => await this.router.handle(request)
     })
 
     console.log(`Bun server in orbit at http://localhost:${server.port} 🚀`)

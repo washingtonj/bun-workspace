@@ -21,23 +21,23 @@ export class Router {
   private readonly useLog?: boolean
   private readonly prefix?: string
 
-  constructor(options: RouterOptions = {}) {
+  constructor (options: RouterOptions = {}) {
     this.prefix = options.prefix
     this.useLog = options.useLog
   }
 
-  private logger(method: string, url: string): void {
+  private logger (method: string, url: string): void {
     if (this.prefix !== undefined) console.log(`[${method}][${this.prefix}]: ${url}`)
     else console.log(`[${method}]: ${url}`)
   }
 
-  private handleWildcardRoute(route: Route, lightyearRequest: LightyearRequest) {
+  private handleWildcardRoute (route: Route, lightyearRequest: LightyearRequest): boolean {
     const pathRegex = new RegExp(route.path.replace(/:[^/]+/g, '([^/]+)'))
     const match = lightyearRequest.pathname.match(pathRegex)
 
-    if (match) {
-      const params = route.path.match(/:[^/]+/g) || []
-      
+    if (match != null) {
+      const params = route.path.match(/:[^/]+/g) ?? []
+
       params.forEach((param, index) => {
         const key = param.replace(':', '')
         const value = match[index + 1]
@@ -48,16 +48,16 @@ export class Router {
     return match !== null && route.method === lightyearRequest.method
   }
 
-  public addRoute(method: RouteMethods, path: string, handler: RouteHandler): void {
+  public addRoute (method: RouteMethods, path: string, handler: RouteHandler): void {
     if (this.prefix !== undefined) path = `${this.prefix}${path}`
     this.routes.push({ method, path, handler })
   }
 
-  public async handle(request: Request): Promise<Response> {
+  public async handle (request: Request): Promise<Response> {
     const lightyearRequest = new LightyearRequest(request)
     const { method, pathname, url } = lightyearRequest
-    
-    if (this.useLog) this.logger(method, url)
+
+    if (this.useLog != null) this.logger(method, url)
 
     const route = this.routes.find(route => {
       if (route.path.includes(':')) return this.handleWildcardRoute(route, lightyearRequest)

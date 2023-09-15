@@ -16,18 +16,18 @@ describe('LightyearRequest', () => {
     const lightyearRequest = new LightyearRequest(request)
 
     // Then
-    expect(await lightyearRequest).toEqual({
+    expect(lightyearRequest).toEqual({
       url: 'https://example.com/',
       pathname: '/',
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      json: { foo: 'bar' },
       params: {},
-      query: {}
+      query: {},
+      request: expect.any(Request)
     })
-  }),
+  })
 
-  test('Should transform request to LightyearRequest with query', async () => {
+  test('Should transform request to LightyearRequest with query', () => {
     // Given
     const request = new Request('https://example.com?foo=bar', {
       method: 'POST',
@@ -41,14 +41,23 @@ describe('LightyearRequest', () => {
     const lightyearRequest = new LightyearRequest(request)
 
     // Then
-    expect(await lightyearRequest).toEqual({
-      url: 'https://example.com/?foo=bar',
-      pathname: '/',
+    expect(lightyearRequest.query).toEqual({ foo: 'bar' })
+  })
+
+  test('Should get json from request', async () => {
+    // Given
+    const request = new Request('https://example.com', {
       method: 'POST',
-      query: { foo: 'bar' },
-      headers: { 'content-type': 'application/json' },
-      params: {},
-      json: { foo: 'bar' }
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({ foo: 'bar' })
     })
+
+    // When
+    const lightyearRequest = new LightyearRequest(request)
+
+    // Then
+    expect(await lightyearRequest.json()).toEqual({ foo: 'bar' })
   })
 })
