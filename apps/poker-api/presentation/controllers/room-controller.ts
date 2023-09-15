@@ -1,15 +1,23 @@
-import { CreateRoomUseCase, JoinRoomUseCase } from 'domain/usecases'
-import type { RoomRepository, UserRepository } from 'domain/interfaces'
-import { InMemoryRooms, InMemoryUsers } from 'infraestructure/repositories'
 import { type Controller, type Req, Res } from 'bun-lightyear'
+import { CreateRoomUseCase, JoinRoomUseCase, GetRoomInfoUseCase } from 'domain/usecases'
+import { RoomRepository, UserRepository } from 'domain/interfaces'
+import { InMemoryRooms, InMemoryUsers } from 'infraestructure/repositories'
 
 const roomRepository: RoomRepository = new InMemoryRooms()
 const userRepository: UserRepository = new InMemoryUsers()
 
 export const getRoom: Controller = async (request: Req) => {
+  const getRoomUseCase = new GetRoomInfoUseCase(roomRepository)
+
   const { roomId } = request.params
-  const room = await roomRepository.findById({ id: roomId })
-  return new Res({ status: 200, body: room })
+  const { userId } = request.query
+
+  if (roomId === null || userId === null) {
+    return new Res({ status: 400, body: 'Missing roomId or userId' })
+  }
+
+  const room = await getRoomUseCase.execute({ roomId, userId })
+  return new Res({ body: room })
 }
 
 export const createRoom: Controller = async (request: Req) => {
