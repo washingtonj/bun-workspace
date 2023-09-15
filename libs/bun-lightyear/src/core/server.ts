@@ -10,7 +10,7 @@ interface ServerOptions {
 type RouterHandler = (req: Request) => Router
 
 export class Server {
-  constructor (private readonly router: RouterHandler, private readonly options?: ServerOptions) { }
+  constructor (private readonly router: RouterHandler, private readonly options?: ServerOptions) {}
 
   private logger (req: Req): void {
     const { method, pathname } = req
@@ -22,7 +22,7 @@ export class Server {
   private async handler (request: Request): Promise<Response> {
     const req = new Req(request)
 
-    if (this.options?.logger !== undefined) this.logger(req)
+    if (this.options?.logger !== true) this.logger(req)
 
     return (await this.router(request).handle(req)).toResponse()
   }

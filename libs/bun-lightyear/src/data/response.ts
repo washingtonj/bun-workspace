@@ -16,13 +16,13 @@ export class Res {
   }
 
   toResponse (): Response {
+    if (typeof this.body === 'string') {
+      this.headers['content-type'] = 'text/html'
+    }
+
     if (typeof this.body === 'object') {
       this.headers['content-type'] = 'application/json'
       this.body = JSON.stringify(this.body)
-    }
-
-    if (typeof this.body === 'string') {
-      this.headers['content-type'] = 'text/html'
     }
 
     return new Response(this.body, { headers: this.headers, status: this.status })
