@@ -1,18 +1,19 @@
 {
   // These tasks will run in order when initializing your CodeSandbox project.
-  "setupTasks": [],
+  "setupTasks": [
+    "Install",
+    "Start"
+  ],
 
   // These tasks can be run from CodeSandbox. Running one will open a log in the app.
   "tasks": {
     "Install": {
       "name": "Install packages",
       "command": "bun install",
-      "runAtStart": true
     },
     "Start": {
-      "name": "Start API dev-server",
-      "command": "cd apps/bun-poker-api && bun dev",
-      "runAtStart": true,
+      "name": "Start Development of Bun Poker API",
+      "command": "bun monorepo apps/bun-poker-api dev",
       "preview": {
         "port": 3000
       }
