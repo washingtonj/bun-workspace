@@ -15,7 +15,7 @@ export class Border {
 
   public connect (request: Request): Router {
     const path = new URL(request.url).pathname
-    const [prefix] = path.split('/')
+    const prefix = `/${path.split('/')[1]}`
 
     if (this.routers.has(prefix)) {
       return this.routers.get(prefix) as Router
