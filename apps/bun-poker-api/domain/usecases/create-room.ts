@@ -14,7 +14,7 @@ export class CreateRoomUseCase {
 
   async execute (params: CreateRoomUseCaseParams): Promise<RoomEntity> {
     const user = await this.userRepository.create({
-      name: params.owner
+      name: params.ownerName
     })
 
     const room = await this.roomRepository.create({

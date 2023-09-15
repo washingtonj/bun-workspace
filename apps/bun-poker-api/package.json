@@ -11,11 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bun-lightyear": "workspace:libs/bun-lightyear"
+    "bun-lightyear": "workspace:*"
   },
   "devDependencies": {
     "bun-types": "latest",
-    "eslint-config-custom": "workspace:libs/eslint-config-custom",
+    "eslint-config-custom": "workspace:*",
     "typescript": "^5.0.0"
   },
   "eslintIgnore": [

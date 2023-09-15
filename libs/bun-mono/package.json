@@ -1,8 +1,8 @@
 {
-  "name": "bun-lightyear",
+  "name": "bun-mono",
   "author": "Washington Junior",
   "version": "1.0.0",
-  "description": "A lightning abstraction of bun serve",
+  "description": "A monorepo manager for bun",
   "main": "index.ts",
   "scripts": {
     "test": "bun test",
