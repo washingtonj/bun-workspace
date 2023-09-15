@@ -1,1 +1,1 @@
-export * from './room-controller'
+export * as RoomController from './room-controller'

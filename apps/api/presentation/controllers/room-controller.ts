@@ -1,40 +1,43 @@
+import { CreateRoomUseCase, JoinRoomUseCase } from 'domain/usecases'
 import type { RoomRepository, UserRepository } from 'domain/interfaces'
-import { CreateRoomUseCase } from 'domain/usecases'
 import { InMemoryRooms, InMemoryUsers } from 'infraestructure/repositories'
+import { LightyearRequest, LightyearResponse } from 'bun-lightyear'
 
-export class RoomController {
-  private readonly CreateRoomUseCase: CreateRoomUseCase
-  private readonly RoomRepository: RoomRepository
-  private readonly UserRepository: UserRepository
+const roomRepository: RoomRepository = new InMemoryRooms()
+const userRepository: UserRepository = new InMemoryUsers()
 
-  constructor (private readonly request: Request) {
-    this.RoomRepository = new InMemoryRooms()
-    this.UserRepository = new InMemoryUsers()
-    this.CreateRoomUseCase = new CreateRoomUseCase(this.RoomRepository, this.UserRepository)
-  }
 
-  public async handle (): Promise<Response> {
-    const { pathname } = new URL(this.request.url)
-
-    switch (pathname) {
-      case '/room':
-        return await this.createRoom()
-      default:
-        return new Response('Not found', { status: 404 })
-    }
-  }
-
-  private async createRoom (): Promise<any> {
-    const { searchParams } = new URL(this.request.url)
-
-    const roomName = searchParams.get('roomName')
-    const userName = searchParams.get('userName')
-
-    if (roomName == null || userName == null) {
-      return new Response('Missing parameters', { status: 400 })
-    }
-
-    const room = await this.CreateRoomUseCase.execute({ name: roomName, ownerName: userName })
-    return new Response(JSON.stringify(room), { status: 201 })
-  }
+export async function getRoom (request: LightyearRequest): Promise<LightyearResponse> {
+  const { roomId } = request.params
+  const room = await roomRepository.findById({ id: roomId })
+  return new LightyearResponse({ status: 200, body: room })
 }
+
+
+export async function createRoom (request: LightyearRequest): Promise<LightyearResponse> {
+  const createRoomUseCase = new CreateRoomUseCase(roomRepository, userRepository)
+
+  const { roomName, userName } = request.query
+  
+  if (roomName == null || userName == null) {
+    return new LightyearResponse({ status: 400, body: 'Missing roomName or userName' })
+  }
+
+  const room = await createRoomUseCase.execute({ name: roomName, ownerName: userName })
+  return new LightyearResponse({ status: 201, body: room })
+}
+
+export async function joinRoom (request: LightyearRequest): Promise<LightyearResponse> {
+  const joinRoomUseCase = new JoinRoomUseCase(roomRepository, userRepository)
+
+  const { roomId } = request.params
+  const { userName } = request.query
+  
+  if (roomId == null || userName == null) {
+    return new LightyearResponse({ status: 400, body: 'Missing roomName or userName' })
+  }
+
+  const room = await joinRoomUseCase.execute({ roomId, userName })
+  return new LightyearResponse({ status: 200, body: room })
+}
+  

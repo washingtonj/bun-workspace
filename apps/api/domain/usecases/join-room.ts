@@ -18,7 +18,7 @@ export class JoinRoomUseCase {
       id: params.roomId
     })
 
-    if (room === null) {
+    if (room === undefined) {
       throw new RoomNotFoundError()
     }
 
@@ -26,7 +26,7 @@ export class JoinRoomUseCase {
       ? await this.userRepository.create({ name: params.userName })
       : await this.userRepository.findById({ id: params.userId })
 
-    if (user === null) {
+    if (user === undefined) {
       throw new UserNotFoundError()
     }
 
