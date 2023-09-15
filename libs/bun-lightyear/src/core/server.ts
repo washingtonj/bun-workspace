@@ -1,21 +1,21 @@
 import { Req } from 'data'
 import type { Router } from './router'
 import { type Server as BunServer } from 'bun'
+import { type ErrorHandler } from 'utils/error-handler'
 
 interface ServerOptions {
   logger?: boolean
   port?: number
+  errorhandler?: ErrorHandler
 }
 
 type RouterHandler = (req: Request) => Router
 
 export class Server {
-  constructor (private readonly router: RouterHandler, private readonly options?: ServerOptions) {}
+  constructor (private readonly router: RouterHandler, private readonly options?: ServerOptions) { }
 
   private logger (req: Req): void {
     const { method, pathname } = req
-
-    // Print request to console colored the method and url
     console.log(`📡 [${method}]: ${pathname}`)
   }
 
@@ -24,7 +24,21 @@ export class Server {
 
     if (this.options?.logger !== true) this.logger(req)
 
-    return (await this.router(request).handle(req)).toResponse()
+    try {
+      return (await this.router(request).handle(req)).toResponse()
+      // eslint-disable-next-line @typescript-eslint/brace-style
+    }
+
+    catch (error: any) {
+      if ((this.options?.errorhandler) != null) {
+        return (await this.options.errorhandler(error)).toResponse()
+      }
+
+      return new Response(JSON.stringify({
+        name: error.name,
+        message: error.message
+      }), { status: 500 })
+    }
   }
 
   start (): BunServer {
