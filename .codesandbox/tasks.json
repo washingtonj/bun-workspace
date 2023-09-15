@@ -13,7 +13,7 @@
     },
     "Start": {
       "name": "Start Development of Bun Poker API",
-      "command": "bun monorepo apps/bun-poker-api dev",
+      "command": "bun monorepo apps/poker-api dev",
       "preview": {
         "port": 3000
       }
