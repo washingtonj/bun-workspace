@@ -1,8 +1,11 @@
 {
-  "name": "bun-poker",
+  "name": "bun-workspace",
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "monorepo": "bun libs/bun-mono/index.ts"
+  },
   "workspaces": [
     "libs/*",
     "apps/*"

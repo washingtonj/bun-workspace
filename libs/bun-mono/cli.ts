@@ -19,11 +19,15 @@ export function infoCLI (): void {
   const examplePackage = Object.keys(commands)[0]
   const exampleCommand = commands[examplePackage].commands[0]
 
-  console.log('To run a package command use the following syntax:', '\x1b[35m%s\x1b[0m', 'bun-mono', '\x1b[2m%s\x1b[0m', '<package-path>', '\x1b[2m%s\x1b[0m', '<command>')
+  console.log('To run a package command use the following syntax:')
+  console.log('\x1b[35m%s\x1b[0m', 'bun-mono', '\x1b[2m%s\x1b[0m', '<package-path>', '\x1b[2m%s\x1b[0m', '<command>')
   console.log('\x1b[2m%s\x1b[0m', `e.g: bun-mono ${examplePackage} ${exampleCommand}`)
-  console.log('To run a bun command use the following syntax:', '\x1b[35m%s\x1b[0m', 'bun-mono', '\x1b[2m%s\x1b[0m', '<package-path> "<command>"')
+  console.log('To run a bun command use the following syntax:')
+  console.log('\x1b[35m%s\x1b[0m', 'bun-mono', '\x1b[2m%s\x1b[0m', '<package-path> "<command>"')
   console.log('\x1b[2m%s\x1b[0m', `e.g: bun-mono ${examplePackage} "add zod"`)
   console.log('\n')
+
+  process.exit(0)
 }
 
 export function runCommandCLI (command: string, packagePath: string): void {
@@ -37,11 +41,13 @@ export function runCommandCLI (command: string, packagePath: string): void {
 
   console.clear()
 
-  console.log(`🐰 Bun Mono - ${message}`)
-  console.log('\x1b[35m%s\x1b[0m', '>', '\x1b[2m%s\x1b[0m', `Running ${command} in ${packagePath}`, '\n')
+  console.log(`🐰 Bun Mono - ${message}`, '\n')
+  console.log('\x1b[35m>\x1b[0m', `\x1b[2mRunning ${command} in ${packagePath}\x1b[0m`)
 
   // run command with stdio but without stderr to avoid errors
   try {
     execSync(`cd ${packagePath} && bun ${command}`, { stdio: 'inherit' })
-  } catch (error) { }
+
+    process.exit(0)
+  } catch (error) {}
 }

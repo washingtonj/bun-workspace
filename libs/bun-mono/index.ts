@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { infoCLI, runCommandCLI } from './cli'
 import { argv } from 'process'
 

@@ -4,10 +4,15 @@
   "version": "1.0.0",
   "description": "A monorepo manager for bun",
   "main": "index.ts",
+  "type": "module",
+  "bin": {
+    "bun-mono": "dist/index.js"
+  },
   "scripts": {
     "test": "bun test",
     "coverage": "bun test --coverage",
-    "lint": "eslint ./src --ext .ts --fix"
+    "lint": "eslint ./src --ext .ts --fix",
+    "build": "bun build index.ts --outdir=dist --target=bun"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
