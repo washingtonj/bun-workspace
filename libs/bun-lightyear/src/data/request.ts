@@ -1,4 +1,4 @@
-export class LightyearRequest {
+export class Req {
   private readonly request: Request
   public readonly url: string
   public readonly method: string
