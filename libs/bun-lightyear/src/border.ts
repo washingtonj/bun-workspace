@@ -1,4 +1,6 @@
+import { type Req } from 'request'
 import type { Router } from './router'
+import { type Res } from 'response'
 
 export class Border {
   private readonly routers = new Map<string, Router>()
@@ -13,14 +15,21 @@ export class Border {
     }
   }
 
-  public connect (request: Request): Router {
+  public connect (request: Req, response: Res): Response | Promise<Response> {
     const path = new URL(request.url).pathname
     const prefix = `/${path.split('/')[1]}`
 
-    if (this.routers.has(prefix)) {
-      return this.routers.get(prefix) as Router
+    const router = this.routers.get(prefix)
+
+    if (router === undefined) {
+      return response.send({
+        status: 404,
+        body: {
+          message: `Could not find a router for ${path}`
+        }
+      })
     }
 
-    return this.routers.get('/') as Router
+    return router.handle(request, response)
   }
 }

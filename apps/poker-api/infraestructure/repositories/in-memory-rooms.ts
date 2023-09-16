@@ -10,6 +10,7 @@ export class InMemoryRooms implements RoomRepository {
       id: randomUUID(),
       name: params.name,
       ownerId: params.ownerId,
+      ownerName: params.ownerName,
       participants: []
     })
 

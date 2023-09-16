@@ -30,7 +30,10 @@ export class JoinRoomUseCase {
       throw new UserNotFoundError()
     }
 
-    room.participants.push(user.id)
+    room.participants.push({
+      id: user.id,
+      name: user.name
+    })
 
     await this.roomRepository.save({ room })
 

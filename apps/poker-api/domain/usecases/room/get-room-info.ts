@@ -17,10 +17,11 @@ export class GetRoomInfoUseCase {
     if (roomInfo === undefined) throw new RoomNotFoundError()
 
     // Verify if the user is a participant of the room
-    const userIsAParticipant = roomInfo.participants.includes(params.userId)
+    const userIsAParticipant = roomInfo.participants.find(participant => participant.id === params.userId)
+    const userIsOwner = roomInfo.ownerId === params.userId
 
     // If user is a participant return the informations of the room
-    if (userIsAParticipant) return roomInfo
+    if (userIsAParticipant != null || userIsOwner) return roomInfo
 
     // else return a non-authorizated information
     throw new UnauthorizedError()

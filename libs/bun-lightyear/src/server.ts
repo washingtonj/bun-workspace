@@ -1,7 +1,9 @@
-import { Req } from 'data'
-import type { Router } from './router'
 import { type Server as BunServer } from 'bun'
-import { type ErrorHandler } from 'utils/error-handler'
+import { Req } from './request'
+import { Res } from './response'
+
+export type Controller = (req: Req, res: Res) => Response | Promise<Response>
+export type ErrorHandler = (error: any, res: Res) => Response | Promise<Response>
 
 interface ServerOptions {
   logger?: boolean
@@ -9,10 +11,10 @@ interface ServerOptions {
   errorhandler?: ErrorHandler
 }
 
-type RouterHandler = (req: Request) => Router
-
 export class Server {
-  constructor (private readonly router: RouterHandler, private readonly options?: ServerOptions) { }
+  constructor (
+    private readonly controller: Controller,
+    private readonly options: ServerOptions = { logger: true, port: 3000 }) { }
 
   private logger (req: Req): void {
     const { method, pathname } = req
@@ -22,16 +24,16 @@ export class Server {
   private async handler (request: Request): Promise<Response> {
     const req = new Req(request)
 
-    if (this.options?.logger !== true) this.logger(req)
+    if (this.options.logger === true) this.logger(req)
 
     try {
-      return (await this.router(request).handle(req)).toResponse()
+      return await this.controller(req, new Res())
       // eslint-disable-next-line @typescript-eslint/brace-style
     }
 
     catch (error: any) {
-      if ((this.options?.errorhandler) != null) {
-        return (await this.options.errorhandler(error)).toResponse()
+      if (this.options.errorhandler != null) {
+        return await this.options.errorhandler(error, new Res())
       }
 
       return new Response(JSON.stringify({
@@ -47,7 +49,7 @@ export class Server {
       fetch: this.handler.bind(this)
     })
 
-    console.log(`Bun server in orbit at http://localhost:${server.port} 🚀`)
+    console.log(`🐰 Our services is in orbit at http://localhost:${server.port} 🚀`)
 
     return server
   }

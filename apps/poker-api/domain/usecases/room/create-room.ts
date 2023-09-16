@@ -19,7 +19,8 @@ export class CreateRoomUseCase {
 
     const room = await this.roomRepository.create({
       name: params.name,
-      ownerId: user.id
+      ownerId: user.id,
+      ownerName: params.ownerName
     })
 
     return room

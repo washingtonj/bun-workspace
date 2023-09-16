@@ -3,6 +3,7 @@ import { type RoomEntity } from 'domain/entities'
 export interface CreateRoomParams {
   name: string
   ownerId: string
+  ownerName: string
 }
 
 export interface FindRoomByIdParams {
