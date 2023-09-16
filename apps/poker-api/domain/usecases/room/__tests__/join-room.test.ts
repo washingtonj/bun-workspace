@@ -1,5 +1,5 @@
 import { describe, it, expect, jest } from 'bun:test'
-import { JoinRoomUseCase } from 'domain/usecases'
+import { JoinRoomUseCase } from 'domain/usecases/room'
 import { type RoomRepository, type UserRepository } from 'domain/interfaces'
 import { RoomNotFoundError, UserNotFoundError } from 'domain/errors'
 import { type UserEntity, type RoomEntity } from 'domain/entities'

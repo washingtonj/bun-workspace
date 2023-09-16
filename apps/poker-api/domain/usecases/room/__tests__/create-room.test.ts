@@ -1,6 +1,6 @@
 import { describe, it, expect, jest } from 'bun:test'
 import { type UserRepository, type RoomRepository } from 'domain/interfaces'
-import { CreateRoomUseCase } from 'domain/usecases'
+import { CreateRoomUseCase } from 'domain/usecases/room'
 
 describe('CreateRoomUseCase', () => {
   it('should create a new room', async () => {
@@ -26,7 +26,7 @@ describe('CreateRoomUseCase', () => {
     // When
     const result = await createRoomUseCase.execute({
       name: 'name',
-      owner: 'owner'
+      ownerName: 'owner'
     })
 
     // Then

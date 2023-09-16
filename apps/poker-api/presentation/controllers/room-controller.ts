@@ -1,6 +1,6 @@
 import { type Controller, type Req, Res, Router } from 'bun-lightyear'
 import type { RoomRepository, UserRepository } from 'domain/interfaces'
-import { CreateRoomUseCase, JoinRoomUseCase, GetRoomInfoUseCase } from 'domain/usecases'
+import { CreateRoomUseCase, JoinRoomUseCase, GetRoomInfoUseCase } from 'domain/usecases/room'
 import { InMemoryRooms, InMemoryUsers } from 'infraestructure/repositories'
 
 const roomRepository: RoomRepository = new InMemoryRooms()

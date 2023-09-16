@@ -1,6 +1,6 @@
 import { describe, it, expect, jest } from 'bun:test'
 import { type VoteRepository } from 'domain/interfaces'
-import { VoteUseCase } from 'domain/usecases'
+import { VoteUseCase } from 'domain/usecases/play'
 
 describe('VoteUseCase', () => {
   it('should update the vote if the user has already voted', async () => {
@@ -10,7 +10,7 @@ describe('VoteUseCase', () => {
       findByUserId: jest.fn(async () => await Promise.resolve({
         userId: 'user-id',
         roomId: 'room-id',
-        value: 1
+        value: '1'
       })),
       save: jest.fn()
     }
@@ -21,14 +21,14 @@ describe('VoteUseCase', () => {
     const vote = await voteUseCase.execute({
       userId: 'user-id',
       roomId: 'room-id',
-      value: 2
+      value: '2'
     })
 
     // Then
     expect(vote).toEqual({
       userId: 'user-id',
       roomId: 'room-id',
-      value: 2
+      value: '2'
     })
   })
 
@@ -46,7 +46,7 @@ describe('VoteUseCase', () => {
     const vote = await voteUseCase.execute({
       userId: 'user-id',
       roomId: 'room-id',
-      value: 2
+      value: '2'
     })
 
     // Then
@@ -54,7 +54,7 @@ describe('VoteUseCase', () => {
       id: expect.any(String),
       userId: 'user-id',
       roomId: 'room-id',
-      value: 2
+      value: '2'
     })
   })
 })

@@ -1,6 +1,6 @@
-import { RoomEntity } from 'domain/entities'
+import { type RoomEntity } from 'domain/entities'
 import { RoomNotFoundError, UnauthorizedError } from 'domain/errors'
-import { RoomRepository } from 'domain/interfaces'
+import { type RoomRepository } from 'domain/interfaces'
 
 interface GetRoomInfoUseCaseParams {
   roomId: string
@@ -8,9 +8,9 @@ interface GetRoomInfoUseCaseParams {
 }
 
 export class GetRoomInfoUseCase {
-  constructor(private readonly roomRepository: RoomRepository) {}
+  constructor (private readonly roomRepository: RoomRepository) {}
 
-  public async execute(params: GetRoomInfoUseCaseParams): Promise<RoomEntity> {
+  public async execute (params: GetRoomInfoUseCaseParams): Promise<RoomEntity> {
     // verify if the room exists
     const roomInfo = await this.roomRepository.findById({ id: params.roomId })
 

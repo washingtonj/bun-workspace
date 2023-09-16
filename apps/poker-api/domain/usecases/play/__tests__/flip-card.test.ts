@@ -1,6 +1,6 @@
 import { describe, it, expect, jest } from 'bun:test'
 import { type VoteRepository } from 'domain/interfaces'
-import { FlipCardsUseCase } from 'domain/usecases'
+import { FlipCardsUseCase } from 'domain/usecases/play'
 
 describe('FlipCardsUseCase', () => {
   it('should return all votes from a room', async () => {
