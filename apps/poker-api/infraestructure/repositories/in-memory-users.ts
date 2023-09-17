@@ -2,8 +2,9 @@ import { randomUUID } from 'crypto'
 import { UserEntity } from 'domain/entities'
 import type { FindUserByIdParams, UserRepository, CreateUserParams } from 'domain/interfaces'
 
+const IN_MEMORY_USERS: UserEntity[] = []
 export class InMemoryUsers implements UserRepository {
-  private readonly users: UserEntity[] = []
+  private readonly users: UserEntity[] = IN_MEMORY_USERS
 
   async create (params: CreateUserParams): Promise<UserEntity> {
     const user = new UserEntity({

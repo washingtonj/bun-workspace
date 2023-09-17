@@ -2,8 +2,10 @@ import { randomUUID } from 'crypto'
 import { RoomEntity } from 'domain/entities'
 import type { CreateRoomParams, FindRoomByIdParams, SaveRoomParams, RoomRepository } from 'domain/interfaces'
 
+const IN_MEMORY_ROOMS: RoomEntity[] = []
+
 export class InMemoryRooms implements RoomRepository {
-  private readonly rooms: RoomEntity[] = []
+  private readonly rooms: RoomEntity[] = IN_MEMORY_ROOMS
 
   async create (params: CreateRoomParams): Promise<RoomEntity> {
     const room = new RoomEntity({

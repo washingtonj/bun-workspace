@@ -10,6 +10,6 @@ export const CustomErrorHandler: ErrorHandler = async (error, res) => {
     case UserNotFoundError:
       return res.send({ status: 404, body: { message: error.message } })
     default:
-      return res.send({ status: 500, body: { message: 'Internal server error' } })
+      return res.send({ status: 500, body: { message: error.message } })
   }
 }

@@ -19,7 +19,7 @@ export class VoteUseCase {
     // Only update the vote if the user has already voted
     if (alreadyVoted !== undefined) {
       alreadyVoted.value = params.value
-      await this.voteRepository.save(alreadyVoted)
+      await this.voteRepository.update(alreadyVoted)
 
       return alreadyVoted
     }
