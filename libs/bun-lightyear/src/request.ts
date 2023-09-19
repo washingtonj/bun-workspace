@@ -5,6 +5,7 @@ export class Req {
   public readonly headers: Record<string, string>
   public readonly cookies: Record<string, string>
   public pathname: string
+
   public params: Record<string, string>
 
   constructor (private readonly request: Request) {

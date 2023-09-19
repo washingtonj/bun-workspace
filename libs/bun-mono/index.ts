@@ -6,9 +6,10 @@ import { argv } from 'process'
 const packagePath = argv[2]
 const command = argv[3]
 
+
 if (packagePath === undefined || command === undefined) {
   infoCLI()
   process.exit(1)
 }
 
-runCommandCLI(command, packagePath)
+runCommandCLI(argv.slice(3).join(' '), packagePath)

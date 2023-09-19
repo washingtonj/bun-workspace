@@ -1,4 +1,5 @@
 import { type Server as BunServer } from 'bun'
+import { BunSpeech } from 'bun-speech'
 import { Req } from './request'
 import { Res } from './response'
 
@@ -14,17 +15,17 @@ interface ServerOptions {
 export class Server {
   constructor (
     private readonly controller: Controller,
-    private readonly options: ServerOptions = { logger: true, port: 3000 }) { }
+    private readonly options: ServerOptions = {}) { }
 
-  private logger (req: Req): void {
+  private logger (req: Req, requestTime: string): void {
     const { method, pathname } = req
-    console.log(`📡 [${method}]: ${pathname}`)
+    console.log(`📡  [${method}]: ${pathname} in ${requestTime}`)
   }
 
   private async handler (request: Request): Promise<Response> {
     const req = new Req(request)
 
-    if (this.options.logger === true) this.logger(req)
+    const t1 = performance.now()
 
     try {
       return await this.controller(req, new Res())
@@ -40,6 +41,15 @@ export class Server {
         name: error.name,
         message: error.message
       }), { status: 500 })
+      // eslint-disable-next-line @typescript-eslint/brace-style
+    }
+
+    finally {
+      // get the time after the request is done in ms
+      const t2 = performance.now()
+      const requestTime = (t2 - t1).toFixed(2)
+
+      if (this.options.logger !== false) this.logger(req, requestTime.toString().concat('ms'))
     }
   }
 
@@ -49,7 +59,9 @@ export class Server {
       fetch: this.handler.bind(this)
     })
 
-    console.log(`🐰 Our services is in orbit at http://localhost:${server.port} 🚀`)
+    BunSpeech.presentation('Bun Lightyear', 'An API should be fast, like a habbit.')
+    BunSpeech.info(`Server is running on port ${this.options?.port}`)
+    console.log('\n')
 
     return server
   }

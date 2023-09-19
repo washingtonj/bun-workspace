@@ -52,8 +52,6 @@ const getRoom: Controller = async (request: Request, response: Response) => {
   const { roomId } = request.params
   const { userId } = request.cookies
 
-  console.log('getRoom', { roomId, userId })
-
   const room = await getRoomUseCase.execute({ roomId, userId })
 
   return response.send({ body: room })

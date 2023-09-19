@@ -1,19 +1,21 @@
 {
-  "name": "bun-lightyear",
+  "name": "bun-speech",
   "author": "Washington Junior",
   "version": "1.0.0",
-  "description": "A lightning abstraction of bun serve",
+  "description": "What the bun speech?",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
     "test": "bun test",
     "coverage": "bun test --coverage",
-    "lint": "eslint ./src --ext .ts --fix"
-  },
-  "dependencies": {
-    "bun-speech": "workspace:*"
+    "lint": "eslint . --ext .ts --fix",
+    "build": "bun build index.ts --outdir=dist --target=bun"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0"
   }
 }
