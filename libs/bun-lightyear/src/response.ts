@@ -43,9 +43,15 @@ export class Res {
     if (options.expires != null) cookie += `; Expires=${options.expires.toUTCString()}`
     if (options.path != null) cookie += `; Path=${options.path}`
     if (options.domain != null) cookie += `; Domain=${options.domain}`
-    if (options.secure != null) cookie += `; Secure=${options.secure}`
-    if (options.httpOnly != null) cookie += `; HttpOnly=${options.httpOnly}`
-    if (options.sameSite != null) cookie += `; SameSite=${options.sameSite}`
+
+    if (options.secure === true) cookie += '; Secure'
+    if (options.httpOnly === true) cookie += '; HttpOnly'
+
+    if (options.sameSite != null) {
+      cookie += `; SameSite=${options.sameSite}`
+    } else {
+      cookie += '; SameSite=None'
+    }
 
     this.headers['set-cookie'] = cookie
   }

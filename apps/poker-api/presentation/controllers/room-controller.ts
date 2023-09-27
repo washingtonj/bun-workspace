@@ -21,7 +21,8 @@ const createRoom: Controller = async (request: Request, response: Response) => {
     cookies: {
       userId: {
         value: room.ownerId,
-        path: '/'
+        path: '/',
+        secure: true
       }
     }
   })

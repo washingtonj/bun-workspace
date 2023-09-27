@@ -10,6 +10,11 @@ interface ServerOptions {
   logger?: boolean
   port?: number
   errorhandler?: ErrorHandler
+  cors?: {
+    origin: string[]
+    methods?: string[]
+    credentials?: boolean
+  }
 }
 
 export class Server {
@@ -22,19 +27,35 @@ export class Server {
     console.log(`📡  [${method}]: ${pathname} in ${requestTime}`)
   }
 
+  private handleCors (req: Req, res: Res): void {
+    if (this.options.cors != null) {
+      const origin = req.headers.origin
+
+      if (origin != null && this.options.cors.origin.includes(origin)) {
+        res.headers['Access-Control-Allow-Origin'] = origin
+      }
+
+      res.headers['Access-Control-Allow-Methods'] = this.options.cors.methods?.join(', ') ?? 'GET, POST, PUT, DELETE, OPTIONS'
+      res.headers['Access-Control-Allow-Credentials'] = String(this.options.cors.credentials ?? true)
+    }
+  }
+
   private async handler (request: Request): Promise<Response> {
     const req = new Req(request)
+    const res = new Res()
+
+    this.handleCors(req, res)
 
     const t1 = performance.now()
 
     try {
-      return await this.controller(req, new Res())
+      return await this.controller(req, res)
       // eslint-disable-next-line @typescript-eslint/brace-style
     }
 
     catch (error: any) {
       if (this.options.errorhandler != null) {
-        return await this.options.errorhandler(error, new Res())
+        return await this.options.errorhandler(error, res)
       }
 
       return new Response(JSON.stringify({

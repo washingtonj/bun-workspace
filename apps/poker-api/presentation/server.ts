@@ -6,5 +6,10 @@ const border = new Border([RoomController, HealthController, PlayController])
 
 export const server = new Server(border.connect.bind(border), {
   port: 3000,
-  errorhandler: CustomErrorHandler
+  errorhandler: CustomErrorHandler,
+  cors: {
+    origin: ['http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true
+  }
 })

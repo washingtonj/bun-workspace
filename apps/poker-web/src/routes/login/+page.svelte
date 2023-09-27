@@ -1,20 +1,28 @@
 <script lang="ts">
+	import { goto } from '$app/navigation'
 	import { GiantInput, IconButton, LoadingPuff } from '$lib/components';
-	import { onMount } from 'svelte';
+	import { useServices } from '$lib/hooks';
 
 	let userName = '';
 	let roomName = '';
 	let submitting = false;
-	
+
 	let currentStep: 'name' | 'room' = 'name';
+
+	const { roomService } = useServices();
 
 	const nextStep = () => {
 		currentStep = 'room';
 	};
 
-	const submit = () => {
+	const submit = async () => {
 		submitting = true;
-		console.log('submit');
+		
+		await roomService.createRoom(roomName, userName)
+			.then(({ id }) => goto(`/room/${id}`))
+			.catch((err) => alert(err.message));
+
+		submitting = false;
 	};
 </script>
 
@@ -27,7 +35,7 @@
 		{#if currentStep === 'name'}
 			<GiantInput
 				bind:value={userName}
-				on:keyup={e => e.key === 'Enter' && nextStep()}
+				on:keyup={(e) => e.key === 'Enter' && nextStep()}
 				label="A great name for a great person"
 				placeholder="e.g Maria do Bairro"
 			>
@@ -36,7 +44,7 @@
 		{:else if currentStep === 'room'}
 			<GiantInput
 				bind:value={roomName}
-				on:keyup={e => e.key === 'Enter' && submit()}
+				on:keyup={(e) => e.key === 'Enter' && submit()}
 				placeholder="What the name of your room?"
 				label="Insert your room name"
 				disabled={submitting}
