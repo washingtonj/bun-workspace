@@ -1,6 +1,7 @@
 import { type Req } from 'request'
-import type { Router } from './router'
 import { type Res } from 'response'
+import { type WebSocket } from 'websocket'
+import type { Router } from './router'
 
 export class Border {
   private readonly routers = new Map<string, Router>()
@@ -15,7 +16,7 @@ export class Border {
     }
   }
 
-  public connect (request: Req, response: Res): Response | Promise<Response> {
+  public connect (request: Req, response: Res, websocket: WebSocket): Response | Promise<Response> {
     const path = new URL(request.url).pathname
     const prefix = `/${path.split('/')[1]}`
 
@@ -30,6 +31,6 @@ export class Border {
       })
     }
 
-    return router.handle(request, response)
+    return router.handle(request, response, websocket)
   }
 }

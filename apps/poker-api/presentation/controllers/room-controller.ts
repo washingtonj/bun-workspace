@@ -1,6 +1,6 @@
-import { type Controller, type Request, type Response, Router } from 'bun-lightyear'
+import { type Controller, Router } from 'bun-lightyear'
 import type { RoomRepository, UserRepository } from 'domain/interfaces'
-import { CreateRoomUseCase, JoinRoomUseCase, GetRoomInfoUseCase } from 'domain/usecases/room'
+import { CreateRoomUseCase, JoinRoomUseCase } from 'domain/usecases/room'
 import { InMemoryRooms, InMemoryUsers } from 'infraestructure/repositories'
 
 const roomRepository: RoomRepository = new InMemoryRooms()
@@ -8,7 +8,7 @@ const userRepository: UserRepository = new InMemoryUsers()
 
 const room = new Router({ prefix: '/room' })
 
-const createRoom: Controller = async (request: Request, response: Response) => {
+const createRoom: Controller = async (request, response) => {
   const createRoomUseCase = new CreateRoomUseCase(roomRepository, userRepository)
 
   const { roomName, userName } = request.query
@@ -32,34 +32,39 @@ room
   .route('POST', '/create', createRoom)
   .rules({ query: ['roomName', 'userName'] })
 
-const joinRoom: Controller = async (request: Request, response: Response) => {
+const joinRoom: Controller = async (request, response, websocket) => {
   const joinRoomUseCase = new JoinRoomUseCase(roomRepository, userRepository)
 
   const { roomId } = request.params
+  const { userId } = request.cookies
   const { userName } = request.query
 
-  const room = await joinRoomUseCase.execute({ roomId, userName })
+  const joinInformation = await joinRoomUseCase.execute({ roomId, userId, userName })
 
-  return response.send({ status: 200, body: room })
+  if (websocket.isWebSocket) {
+    websocket.upgrade({
+      type: 'room:join',
+      body: joinInformation
+    })
+
+    websocket.publish(roomId, { ...joinInformation.room })
+  }
+
+  return response.send({
+    status: 200,
+    body: joinInformation,
+    cookies: {
+      userId: {
+        value: joinInformation.user.id,
+        path: '/',
+        secure: true
+      }
+    }
+  })
 }
 
 room
-  .route('PUT', '/:roomId', joinRoom)
-  .rules({ query: ['userName'], params: ['roomId'] })
-
-const getRoom: Controller = async (request: Request, response: Response) => {
-  const getRoomUseCase = new GetRoomInfoUseCase(roomRepository)
-
-  const { roomId } = request.params
-  const { userId } = request.cookies
-
-  const room = await getRoomUseCase.execute({ roomId, userId })
-
-  return response.send({ body: room })
-}
-
-room
-  .route('GET', '/:roomId', getRoom)
+  .route('GET', '/:roomId', joinRoom)
   .rules({ params: ['roomId'] })
 
 export default room

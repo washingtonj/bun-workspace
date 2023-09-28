@@ -1,5 +1,6 @@
 import { type Res } from './response'
 import { type Req } from './request'
+import { type WebSocket } from 'websocket'
 import { type Controller } from './server'
 
 type RouteMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
@@ -43,7 +44,7 @@ export class Router {
     if (rules.params !== undefined) route.rules.params = rules.params
   }
 
-  public handle (request: Req, response: Res): Response | Promise<Response> {
+  public handle (request: Req, response: Res, websocket: WebSocket): Response | Promise<Response> {
     const { method, pathname } = request
 
     const route = this.routes.find(route => {
@@ -66,7 +67,7 @@ export class Router {
     }
 
     if (route !== undefined) {
-      return route.handler(request, response)
+      return route.handler(request, response, websocket)
     }
 
     return response.send({

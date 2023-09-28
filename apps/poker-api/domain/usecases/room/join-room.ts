@@ -1,11 +1,11 @@
 import type { UserRepository, RoomRepository } from 'domain/interfaces'
-import type { RoomEntity } from 'domain/entities'
+import type { RoomEntity, UserEntity } from 'domain/entities'
 import { RoomNotFoundError, UserNotFoundError } from 'domain/errors'
 
 export interface JoinRoomUseCaseParams {
   roomId: string
-  userName: string
   userId?: string
+  userName: string
 }
 
 export class JoinRoomUseCase {
@@ -13,30 +13,29 @@ export class JoinRoomUseCase {
     private readonly roomRepository: RoomRepository,
     private readonly userRepository: UserRepository) { }
 
-  async execute (params: JoinRoomUseCaseParams): Promise<RoomEntity> {
-    const room = await this.roomRepository.findById({
-      id: params.roomId
-    })
+  async execute ({ roomId, userId, userName }: JoinRoomUseCaseParams): Promise<{ user: UserEntity, room: RoomEntity }> {
+    const room = await this.roomRepository.findById({ id: roomId })
 
-    if (room === undefined) {
+    if (room == null) {
       throw new RoomNotFoundError()
     }
 
-    const user = params.userId === undefined
-      ? await this.userRepository.create({ name: params.userName })
-      : await this.userRepository.findById({ id: params.userId })
+    const user = userId != null
+      ? await this.userRepository.findById({ id: userId })
+      : await this.userRepository.create({ name: userName })
 
-    if (user === undefined) {
+    if (user == null) {
       throw new UserNotFoundError()
     }
 
-    room.participants.push({
-      id: user.id,
-      name: user.name
-    })
+    if (room.participants.some(u => u.id === user.id)) {
+      return { user, room }
+    }
+
+    room.participants.push(user)
 
     await this.roomRepository.save({ room })
 
-    return room
+    return { user, room }
   }
 }

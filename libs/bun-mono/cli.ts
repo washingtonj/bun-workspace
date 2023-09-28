@@ -36,23 +36,22 @@ export function infoCLI(): void {
 }
 
 export function runCommandCLI(command: string, packagePath: string): void {
-  let message = 'Can you see the bun?'
-
   const splitedCommand = command.split(' ')
-
-  if (splitedCommand.includes('add') || splitedCommand.includes('install')) {
-    message = 'Installing dependencies hm?'
-  }
-
-  console.clear()
 
   BunSpeech.presentation('Bun Mono', "Let's run a command, Fast like a habbit.")
   BunSpeech.info(`running ${command} in ${packagePath}`)
   console.log('\n')
 
-  // run command with stdio but without stderr to avoid errors
   try {
     execSync(`cd ${packagePath} && bun ${command}`, { stdio: 'inherit' })
+
+    if (splitedCommand.includes('add') || splitedCommand.includes('install') || splitedCommand.includes('rm')) {
+  
+      console.log('\n')
+      BunSpeech.info('Remapping dependencies')
+      execSync('rm -rf bun.lockb', { stdio: 'inherit' })
+      execSync('bun install', { stdio: 'inherit' })
+    }  
 
     process.exit(0)
   } catch (error) { }
