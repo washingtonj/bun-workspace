@@ -4,7 +4,7 @@ import { type WebSocket } from 'websocket'
 import { type Controller } from './server'
 
 type RouteMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-interface RouteRules { query?: string[], params?: string[] }
+interface RouteRules { query?: string[], params?: string[], cookies?: string[] }
 interface RouteWithRules { rules: (rules: RouteRules) => void }
 
 interface Route {
@@ -42,6 +42,7 @@ export class Router {
     route.rules = {}
     if (rules.query !== undefined) route.rules.query = rules.query
     if (rules.params !== undefined) route.rules.params = rules.params
+    if (rules.cookies !== undefined) route.rules.cookies = rules.cookies
   }
 
   public handle (request: Req, response: Res, websocket: WebSocket): Response | Promise<Response> {
@@ -60,7 +61,8 @@ export class Router {
           needed: route.rules,
           received: {
             query: request.query,
-            params: request.params
+            params: request.params,
+            cookies: request.cookies
           }
         }
       })
@@ -98,7 +100,7 @@ export class Router {
   private handleRules (route: Route, request: Req): boolean {
     if (route.rules === undefined) return true
 
-    const { query, params } = route.rules
+    const { query, params, cookies } = route.rules
 
     if (query !== undefined) {
       const missingQueryParams = query.filter(param => request.query[param] === undefined)
@@ -108,6 +110,11 @@ export class Router {
     if (params !== undefined) {
       const missingParams = params.filter(param => request.params[param] === undefined)
       if (missingParams.length > 0) return false
+    }
+
+    if (cookies !== undefined) {
+      const missingCookies = cookies.filter(cookie => request.cookies[cookie] === undefined)
+      if (missingCookies.length > 0) return false
     }
 
     return true

@@ -1,5 +1,9 @@
 import { type Server } from 'bun'
 
+export interface WebSocketData {
+  type: string
+  body: Record<string, any>
+}
 export class WebSocket {
   constructor (
     private readonly server: Server,
@@ -9,14 +13,14 @@ export class WebSocket {
     return this.request.headers.get('upgrade') === 'websocket'
   }
 
-  upgrade (data?: Record<string, any>, headers?: Record<string, any>): void {
+  upgrade (data?: WebSocketData, headers?: Record<string, any>): void {
     this.server.upgrade(this.request, {
       data,
       headers
     })
   }
 
-  publish (topic: string, data?: Record<string, any>): void {
+  publish (topic: string, data?: WebSocketData): void {
     this.server.publish(topic, JSON.stringify(data))
   }
 }

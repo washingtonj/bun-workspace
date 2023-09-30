@@ -1,12 +1,11 @@
 export class Req {
   public readonly url: string
   public readonly method: string
-  public readonly query: Record<string, string>
+  public readonly query: Record<string, string | undefined>
   public readonly headers: Record<string, string>
-  public readonly cookies: Record<string, string>
+  public readonly cookies: Record<string, string | undefined>
   public pathname: string
-
-  public params: Record<string, string>
+  public params: Record<string, string | undefined>
 
   constructor (private readonly request: Request) {
     const { pathname } = new URL(request.url)

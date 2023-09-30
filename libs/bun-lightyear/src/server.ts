@@ -10,7 +10,6 @@ export type ErrorHandler = (error: any, res: Res) => Response | Promise<Response
 interface ServerOptions {
   logger?: boolean
   port?: number
-  websocket?: WebSocketHandler
   errorhandler?: ErrorHandler
   cors?: {
     origin: string[]
@@ -22,7 +21,9 @@ interface ServerOptions {
 export class Server {
   constructor (
     private readonly controller: Controller,
-    private readonly options: ServerOptions = {}) { }
+    private readonly options: ServerOptions = {},
+    private readonly websocket: WebSocketHandler = { message: () => {} }
+  ) { }
 
   private handleCors (req: Req, res: Res): void {
     if (this.options.cors != null) {
@@ -79,9 +80,7 @@ export class Server {
       port: this.options?.port,
       fetch: this.handler.bind(this),
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      websocket: this.options?.websocket ?? {
-        message: () => {}
-      } as WebSocketHandler
+      websocket: this.websocket
     })
 
     BunSpeech.presentation('Bun Lightyear', 'An API should be fast, like a habbit.')

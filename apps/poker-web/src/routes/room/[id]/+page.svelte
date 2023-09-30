@@ -1,57 +1,15 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { onMount, onDestroy } from 'svelte';
 	import { useServices } from '$lib/hooks';
-	import { onDestroy, onMount } from 'svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	const { roomService } = useServices();
 
-	let data: {
-		room: {
-			id: string;
-			name: string;
-			ownerName: string;
-			participants: {
-				id: string;
-				name: string;
-			}[];
-		};
-		user: {
-			id: string;
-			name: string;
-		};
-	};
-
-	let loadingData = true;
-	let loadingError = false;
-
-	const socket = roomService.roomSocket($page.params.id);
-
-	async function getData(userName: string | null) {
-		try {
-			data = await roomService.joinRoom($page.params.id, userName ?? undefined);
-		} catch {
-			loadingError = true;
-		} finally {
-			loadingData = false;
-		}
-	}
+	const socket = roomService.roomSocket(data.room.id);
 
 	onMount(() => {
-		let userName: string | null = null;
-		
-		const userId = document.cookie
-			.split('; ')
-			.find((row) => row.startsWith('userId'))
-			?.split('=')[1];
-
-		if (userId == null) {
-			userName = window.prompt('Enter your name');
-		}
-
-		if (userName || userId) {
-			getData(userName);
-		}
-
 		socket.onmessage = (event) => {
 			const response = JSON.parse(event.data);
 			data = { ...data, room: response };
@@ -63,7 +21,7 @@
 	});
 </script>
 
-{#if !loadingData && data !== null}
+{#if data !== null}
 	<main class="flex flex-col items-center mt-48">
 		<div class="flex flex-col items-center w-fit mb-12">
 			<p class="cursor-default text-3xl mb-8">🐰</p>
@@ -91,15 +49,5 @@
 				</p>
 			{/each}
 		</div>
-	</main>
-{:else if loadingData}
-	<main class="flex flex-col items-center mt-48">
-		<p class="text-3xl mb-8">🐰</p>
-		<p class="text-xl font-bold text-pink-800">Loading...</p>
-	</main>
-{:else if loadingError}
-	<main class="flex flex-col items-center mt-48">
-		<p class="text-3xl mb-8">🐰</p>
-		<p class="text-xl font-bold text-pink-800">Error</p>
 	</main>
 {/if}
