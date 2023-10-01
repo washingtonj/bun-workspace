@@ -4,6 +4,10 @@ export interface WebSocketData {
   type: string
   body: Record<string, any>
 }
+
+/**
+ * A websocket object to be used in controllers.
+ */
 export class WebSocket {
   constructor (
     private readonly server: Server,

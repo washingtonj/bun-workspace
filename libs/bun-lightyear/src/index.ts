@@ -1,6 +1,6 @@
 export { Server, type Controller, type ErrorHandler } from './server'
 export { Router } from './router'
-export { Border } from './border'
+export { Gateway } from './gateway'
 export { Req as Request } from './request'
 export { Res as Response } from './response'
 export type { WebSocketData } from './websocket'

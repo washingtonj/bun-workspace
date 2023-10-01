@@ -1,9 +1,12 @@
-import { type Req } from 'request'
-import { type Res } from 'response'
-import { type WebSocket } from 'websocket'
+import type { Req } from 'request'
+import type { Res } from 'response'
+import type { WebSocket } from 'websocket'
 import type { Router } from './router'
 
-export class Border {
+/**
+ * A gateway is a class that concats multiple routers into one.
+ */
+export class Gateway {
   private readonly routers = new Map<string, Router>()
 
   constructor (routers: Router[]) {
@@ -16,6 +19,9 @@ export class Border {
     }
   }
 
+  /**
+   * Connects a request and a response to a router.
+   */
   public connect (request: Req, response: Res, websocket: WebSocket): Response | Promise<Response> {
     const path = new URL(request.url).pathname
     const prefix = `/${path.split('/')[1]}`

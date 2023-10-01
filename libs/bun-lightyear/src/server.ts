@@ -4,7 +4,14 @@ import { Req } from './request'
 import { Res } from './response'
 import { WebSocket } from './websocket'
 
+/**
+ * A controller is a function that handles requests and responses.
+ */
 export type Controller = (req: Req, res: Res, ws: WebSocket) => Response | Promise<Response>
+
+/**
+ * A error handler is a function that handles errors.
+ */
 export type ErrorHandler = (error: any, res: Res) => Response | Promise<Response>
 
 interface ServerOptions {
@@ -18,11 +25,24 @@ interface ServerOptions {
   }
 }
 
+/**
+ * A Web server powered by Bun.
+ */
 export class Server {
   constructor (
+    /**
+     * The controller used to handle requests and responses
+     * You can use a router instance here to handle multiple routes.
+     */
     private readonly controller: Controller,
+    /**
+     * Options to be used in the server instance
+     */
     private readonly options: ServerOptions = {},
-    private readonly websocket: WebSocketHandler = { message: () => {} }
+    /**
+     * A websocket handler to be used in the server instance
+     */
+    private readonly websocket: WebSocketHandler = { message: () => { } }
   ) { }
 
   private handleCors (req: Req, res: Res): void {

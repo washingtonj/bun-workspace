@@ -1,3 +1,6 @@
+/**
+ * A reuqest object to be used in controllers.
+ */
 export class Req {
   public readonly url: string
   public readonly method: string

@@ -16,6 +16,9 @@ interface CookiesOptions {
   sameSite?: 'strict' | 'lax' | 'none'
 }
 
+/**
+ * A response object to be used in controllers.
+ */
 export class Res {
   public body?: string | Record<string, any>
   public headers: Record<string, string> = {}
